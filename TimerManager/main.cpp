@@ -1,10 +1,10 @@
 #include <iostream>
 #include <sstream>
+#include <thread>
 
-template <typename T, typename ...Args>
-void Apply(T&& t, Args... args) {
-	t(args...);
-	
+template <typename T,typename Func, typename ...Args>
+void Apply(T&& t, Func&& f, Args&&... args) {
+    (t.*f)(args...);
 }
 
 void Printer(std::string a, std::string b) {
@@ -13,10 +13,31 @@ void Printer(std::string a, std::string b) {
 	ss << b;
 	std::cout << ss.str() << std::endl;
 }
+class TestThread {
+    int counter;
+    std::thread t;
+public:
+    TestThread(int c) : counter(c) {
+        t = std::thread(&TestThread::fun,this);
+        std::cout << "Created Thread" << std::endl;
+    }
+    void fun() {
+        while(counter-- > 0) {
+            std::cout << counter << std::endl;
+        }
+    }
+    ~TestThread() {if(t.joinable()){t.join();} std::cout << "Destroyed thread";}
+};
+class A {
+public:
+    int i;
+    A(int inte) : i(inte){}
+    void fun(){std::cout << "Called" << std::endl;}
 
+};
 int main() {
-	auto l = []() {};
-	Apply(Printer,"a","a");
+    A obj {2};
+    Apply(obj,&A::fun);
 	return 0;
 }
 
