@@ -1,44 +1,19 @@
 #include <iostream>
-#include <sstream>
-#include <thread>
+#include "src/TimerManager.h"
+#include "TestBed.h"
 
-template <typename T,typename Func, typename ...Args>
-void Apply(T&& t, Func&& f, Args&&... args) {
-    (t.*f)(args...);
-}
-
-void Printer(std::string a, std::string b) {
-	std::stringstream ss;
-	ss << a;
-	ss << b;
-	std::cout << ss.str() << std::endl;
-}
-class TestThread {
-    int counter;
-    std::thread t;
-public:
-    TestThread(int c) : counter(c) {
-        t = std::thread(&TestThread::fun,this);
-        std::cout << "Created Thread" << std::endl;
-    }
-    void fun() {
-        while(counter-- > 0) {
-            std::cout << counter << std::endl;
-        }
-    }
-    ~TestThread() {if(t.joinable()){t.join();} std::cout << "Destroyed thread";}
-};
-class A {
-public:
-    int i;
-    A(int inte) : i(inte){}
-    void fun(){std::cout << "Called" << std::endl;}
-
-};
 int main() {
-    A obj {2};
-    Apply(obj,&A::fun);
-	return 0;
+    TestBed* test = new TestBed();
+
+    TimerHandle handle;
+    TimerManager::GetInstance()->start_timer(handle,3.0,false,test, &TestBed::print_string,1);
+    TimerHandle handle2;
+    TimerManager::GetInstance()->start_timer(handle2,.50,true,test, &TestBed::print_string,1);
+    while (true) {
+        // Imaginary Application Loop
+
+    }
+    return 0;
 }
 
 /**
