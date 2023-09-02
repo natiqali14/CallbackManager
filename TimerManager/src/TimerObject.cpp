@@ -7,16 +7,10 @@ TimerObject::TimerObject(unsigned long long time, bool b_is_loop) : time_to_call
 }
 
 TimerObject::~TimerObject() {
-
-
-
+    if(main_thread.joinable()) main_thread.join();
     std::cout << "TimerObject::~TimerObject -> destructed" << std::endl;
 }
 
 void TimerObject::set_stop_condition(bool b_stop) {
-    b_should_stop = b_stop;
-}
-
-void TimerObject::join_all_threads() {
-    std::cout << "Join" << std::endl;
+    b_loop = !b_stop;
 }

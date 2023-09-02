@@ -1,21 +1,18 @@
 //
 // Created by natiq on 8/27/2023.
 //
-
-#include <thread>
+#include <mutex>
 #include "TestBed.h"
-
-
+#include <iostream>
 TestBed::TestBed() {
     i = 0;
 }
-
 TestBed::~TestBed() {
-    std::cout << "";
+    std::cout << "Test Bed object destroyed" << std::endl;
 }
-void TestBed::print_string(int s) {
+void TestBed::print_string() {
+    m.lock();
+    for(int j = 0; j < 100000; j++) i++;
     std::cout << i << std::endl;
-   std::this_thread::sleep_for(std::chrono::seconds(2));
-
-    i++;
+    m.unlock();
 }

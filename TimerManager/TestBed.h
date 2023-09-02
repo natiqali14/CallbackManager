@@ -4,17 +4,12 @@
 
 #ifndef TIMERMANAGER_TESTBED_H
 #define TIMERMANAGER_TESTBED_H
-#include <iostream>
-#include <atomic>
-
 class TestBed {
 public:
-    std::atomic<int> i {1};
+    std::mutex m;
+    int i = 1;
     TestBed() ;
     ~TestBed() ;
-
-    void print_string(int s);
+    void print_string();
 };
-
-
 #endif //TIMERMANAGER_TESTBED_H
